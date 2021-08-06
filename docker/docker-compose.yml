@@ -1,0 +1,131 @@
+version: "3.8"
+
+services:
+  zookeeper.zookeeper:
+    container_name: zookeeper-zookeeper
+    image: confluentinc/cp-zookeeper:${ZOOKEEPER_VERSION}
+    tty: true
+    env_file:
+      - .env
+    environment:
+      ZOOKEEPER_TICK_TIME: ${ZOOKEEPER_TICK_TIME}
+      ZOOKEEPER_CLIENT_PORT: ${ZOOKEEPER_CLIENT_PORT}
+    ports:
+      - ${ZOOKEEPER_CLIENT_PORT}:${ZOOKEEPER_CLIENT_PORT}
+    expose:
+      - ${ZOOKEEPER_CLIENT_PORT}
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    cpu_shares: 4
+    networks:
+      - default.network
+  kafka.kafka:
+    container_name: kafka-kafka
+    image: confluentinc/cp-kafka:${KAFKA_VERSION}
+    tty: true
+    depends_on:
+      zookeeper:
+        condition: service_started
+    ports:
+      - 2${KAFKA_CLIENT_PORT}:2${KAFKA_CLIENT_PORT}
+      - ${KAFKA_CLIENT_PORT}:${KAFKA_CLIENT_PORT}
+      - ${KAFKA_JMX_PORT}:${KAFKA_JMX_PORT}
+    expose:
+      - 2${KAFKA_CLIENT_PORT}
+      - ${KAFKA_CLIENT_PORT}
+      - ${KAFKA_JMX_PORT}
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    cpu_shares: 4
+    env_file:
+      - .env
+    environment:
+      KAFKA_BROKER_ID: ${KAFKA_BROKER_ID}
+      KAFKA_NUM_PARTITIONS: ${KAFKA_NUM_PARTITIONS}
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: ${KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR}
+      KAFKA_ZOOKEEPER_CONNECT: ${ZOOKEEPER_SERVICE}:${ZOOKEEPER_CLIENT_PORT}
+      KAFKA_LISTENERS: PLAINTEXT://${KAFKA_SERVICE}:2${KAFKA_CLIENT_PORT},PLAINTEXT_HOST://${KAFKA_JMX_HOSTNAME}:${KAFKA_CLIENT_PORT}
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://${KAFKA_SERVICE}:2${KAFKA_CLIENT_PORT},PLAINTEXT_HOST://${KAFKA_JMX_HOSTNAME}:${KAFKA_CLIENT_PORT}
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      # KAFKA_DELETE_TOPIC_ENABLE: ${KAFKA_DELETE_TOPIC_ENABLE}
+      # Enable internal transactions;
+      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: ${KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS}
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: ${KAFKA_TRANSACTION_STATE_LOG_MIN_ISR}
+      # This rule is only allowed under development; in the
+      # case of production switch off to the 0 replication factory;
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: ${KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR}
+      KAFKA_JMX_PORT: ${KAFKA_JMX_PORT}
+      KAFKA_JMX_HOSTNAME: ${KAFKA_JMX_HOSTNAME}
+    networks:
+      - default.network
+  schema.registry:
+    container_name: schema-registry
+    image: confluentinc/cp-schema-registry:${SCHEMA_REGISTRY_VERSION}
+    tty: true
+    depends_on:
+      kafka.kafka:
+        condition: service_started
+    env_file:
+      - .env
+    environment:
+      SCHEMA_REGISTRY_HOST_NAME: ${SCHEMA_REGISTRY_HOST_NAME}
+      SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: ${SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS}
+      SCHEMA_REGISTRY_LISTENERS: ${SCHEMA_REGISTRY_LISTENERS}
+    ports: 
+      - ${SCHEMA_REGISTRY_HOST_PORT}:${SCHEMA_REGISTRY_HOST_PORT}
+    expose:
+      - ${SCHEMA_REGISTRY_HOST_PORT}
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    cpu_shares: 4
+    networks:
+      - default.network
+  elastic.elasticsearch:
+    container_name: elastic-elasticsearch
+    image: elasticsearch:${ELASTIC_VERSION}
+    restart: unless-stopped
+    tty: true
+    volumes:
+      - type: volume
+        source: elastic.volume
+        target: /usr/share/elasticsearch/data/
+        read_only: false
+    env_file:
+      - .env
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    environment:
+      ES_JAVA_OPTS: ${ELASTIC_JAVA_OPTS}
+      ELASTIC_PASSWORD: ${ELASTIC_PASSWORD}
+      bootstrap.memory_lock: "true"
+      discovery.type: ${ELASTIC_DISCOVERY_TYPE}
+    cpu_shares: 4
+    ports:
+      - 9200:9200
+      - 9300:9300
+    expose:
+      - 9200
+      - 9300
+    networks:
+      - default.network
+
+volumes:
+  elastic.volume:
+    driver: local
+  zookeeper.volume:
+    driver: local
+  kafka.volume:
+    driver: local
+
+networks:
+  default.network:
+    driver: bridge
