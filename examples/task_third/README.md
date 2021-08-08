@@ -62,10 +62,14 @@ notifaction service will be executed for them:
 
 ```sh
 redis> SET customer:notification:status:<ID> "true"
-redis> EXPIRE customer:notification:status:<ID> 3600 (one hour)
+redis> EXPIRE customer:notification:status:<ID> 3600
 redis> TTL customer:notification:status:<ID>
 integer(3600)
 redis> DEL customer:notification:status:<ID>
 ```
 
 The main pros of this idea, that redis is laying under RAM and every our request will be not taking a plenty of time for condition checking.
+
+We can put some shell redis.shell.scripts into scripts folder.
+
+In the case of last range number, we can call any cron sub-task.
