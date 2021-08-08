@@ -11,15 +11,13 @@ interaction with task situations.
 pushd example > /dev/null 2>&1
 ```
 
-| Task № | README |
-| ------ | ------ |
-|   1    | [example/task_first][PlDb] |
-|   2    | [example/task_second][PlDb] |
-|   3    | [example/task_third][PlDb]  |
+| Task № | README                      |
+| ------ | --------------------------- |
+| 1      | [example/task_first][first]  |
+| 2      | [example/task_second][second] |
+| 3      | [example/task_third][third]  |
 
-[//]: #
-
-[RDKAFKA]: <>
-[SUPERVISORD]: <>
-[CRON]: <>
-[FLOCK]: <>
+[//]: # "Task references are prodiving in the list below"
+[first]: https://github.com/Emik123dsa/innoscripta/tree/master/examples/task_first
+[second]: https://github.com/Emik123dsa/innoscripta/tree/master/examples/task_second
+[third]: https://github.com/Emik123dsa/innoscripta/tree/master/examples/task_third

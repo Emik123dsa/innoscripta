@@ -1,3 +1,3 @@
 package com.innoscripta.common.services;
 
-public final class FileProducerService {}
+public final class FileProducerService { }
