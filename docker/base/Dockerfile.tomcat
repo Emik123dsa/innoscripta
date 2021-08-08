@@ -1,0 +1,17 @@
+FROM tomcat:10.0.10-jdk16-openjdk-buster as TOMCAT
+
+ARG ENV="prod"
+
+ENV TOMCAT_ENV ${ENV}
+
+RUN cp -avT ${CATALINA_HOME}/webapps.dist/manager ${CATALINA_HOME}/webapps/manager
+
+COPY ${TOMCAT_ENV}/web/manager-context.xml /usr/local/tomcat/webapps/manager/META-INF/context.xml
+
+COPY ${TOMCAT_ENV}/web/tomcat-users.xml /usr/local/tomcat/conf/tomcat-users.xml
+
+STOPSIGNAL SIGTERM
+
+EXPOSE 8080
+
+CMD ["catalina.sh", "run"]

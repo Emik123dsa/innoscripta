@@ -1,2 +1,1 @@
-install:
-	echo "123"
+CC := "docker-compose"
