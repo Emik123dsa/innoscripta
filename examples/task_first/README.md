@@ -13,7 +13,7 @@ as it was expected.
 As a suggestion, I would like to choose any message brokers and launch it out in other thread:
 
 - [Apache Kafka][apachekafka] - the most preferable for this purpose
-- [RabbitMQ][rabbitmq]- AMQP message broker
+- [RabbitMQ][rabbitmq] - AMQP message broker
 
 The only thing that we actually demand to change here is skipping the
 next processes after the user was uploading the document.
