@@ -1,0 +1,23 @@
+syntax = "proto2";
+
+package com.innoscripta.common;
+
+option optimize_for = LITE_RUNTIME;
+
+option java_multiple_files = true;
+option java_package = "com.innoscripta.common.protos.file.structure";
+option java_outer_classname = "FileStructureProtos";
+
+message FileStructure {
+    required uint32 id = 1;
+
+    optional string filePath = 2;
+    
+    optional string serializeType = 3;
+
+    optional string fileContent = 4;
+
+    optional float date_created = 5;
+
+    optional float date_updated = 6;
+}
