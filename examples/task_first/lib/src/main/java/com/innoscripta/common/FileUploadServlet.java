@@ -16,6 +16,7 @@ public final class FileUploadServlet extends HttpServlet {
 
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         response.setContentType("text/html");
+        
         response.setStatus(HttpServletResponse.SC_OK);
         response.getWriter().print("<h1> Hello, servlet </h1>");
     }

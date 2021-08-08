@@ -4,7 +4,7 @@
 
 **Idea:**
 
-The size of file can be not increase some MG, hence,
+The size of file can be not increase some Mb, hence,
 the process of uploading will not take upon more than couple moments.
 
 In the case, if we want to parse and analyze the file, it can definitely take more time
