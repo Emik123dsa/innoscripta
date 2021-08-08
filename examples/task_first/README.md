@@ -12,8 +12,8 @@ as it was expected.
 
 As a suggestion, I would like to choose any message brokers and launch it out in other thread:
 
-- [Apache Kafka] - the most preferable for this purpose
-- [RabbitMQ] - AMQP message broker
+- [Apache Kafka][apachekafka] - the most preferable for this purpose
+- [RabbitMQ][rabbitmq]- AMQP message broker
 
 The only thing that we actually demand to change here is skipping the
 next processes after the user was uploading the document.
@@ -62,3 +62,7 @@ User's file uploaded -> Dispatch notification to the user in the browser (Http R
 | Pros                                                                                         | Cons                                                                   |
 | -------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------- |
 | The user no longer require to wait in the browser tab, once consumer will digest the message | It still will take some time, if size of the file exceeding than usual |
+
+[//]: # "Message broker references"
+[apachekafka]: https://kafka.apache.org/
+[rabbitmq]: https://www.rabbitmq.com/
